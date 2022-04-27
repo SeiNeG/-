@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <ctime>
+using namespace std;
+void ShekerSort(int* mass, int n)
+{
+    unsigned int start = clock();
+    long long int a = 0; // счетчик сравнений
+    long long int b = 0; // счетчик перемещений
+    int left = 0, right = n - 1; // левая и правая границы
+    while (left < right)
+    {
+        a++;
+        int flag = 0; // флаг перестановок
+        for (int i = left; i < right; i++)  // двигаемся слева направо
+        {
+            a++;
+            if (mass[i] > mass[i + 1]) // если следующий элемент меньше текущего, меняем их местами
+            {
+                a++;
+                b++;
+                int t = mass[i];
+                mass[i] = mass[i + 1];
+                mass[i + 1] = t;
+                flag = 1; // перемещения в этом цикле были
+            }
+        }
+        right--; // сдвигаем правую границу на предыдущий элемент
+        for (int i = right; i > left; i--) //двигаемся справа налево
+        {
+            a++;
+            if (mass[i - 1] > mass[i]) // если предыдущий элемент больше текущего, меняем их местами
+            {
+                a++;
+                b++;
+                int t = mass[i];
+                mass[i] = mass[i - 1];
+                mass[i - 1] = t;
+                flag = 1; // перемещения в этом цикле были
+            }
+        }
+        left++; // сдвигаем левую границу на следующий элемент
+        if (flag == 0) // если перестановок не было, то досрочно завершаем цикл (условие Айверсона)
+        {
+            break;
+        }
+    }
+    unsigned int end = clock();
+    cout << "Количество сравнений: " << a << endl;
+    cout << "Количество перемещений: " << b << endl;
+    cout << "Общее количество сравнений и перемещений: " << a + b << endl;
+    cout << "Время выполнения: " << (end - start) << endl;
+}
+int main()
+{
+    setlocale(LC_ALL, "rus");
+    int N = 0;
+    int n, sw, num;
+    cout << "Введите количество переменных массива " << endl;
+    cin >> n;
+    int n2 = n;
+    int* mass = new int[n];
+    int* mass2 = new int[n];
+    cout << "Ввод вручную - 0 " << endl;
+    cout << "Заполнить случайными числами - 1" << endl;
+    cin >> sw;
+    switch (sw)
+    {
+    case 1:
+        srand(time(NULL));
+        for (int i = 0; i < n; i++)
+        {
+            int num = rand() % 20 + 1;
+            mass[i] = num;
+        }
+        break;
+    case 0:
+        for (int i = 0; i < n; i++) //ввод вручную
+        {
+            int input;
+            cout << "arr[" << i << "]=";
+            cin >> input;
+            mass[i] = input;
+        }
+        break;
+    }
+
+    cout << "Изначальный массив = [";
+    for (int g = 0; g < n; g++)
+    {
+        cout << " " << mass[g];
+    }
+    cout << " ] " << endl;
+    ShekerSort(mass, n); //вызов первого алгоритма
+    cout << "Результат сортировки вторым алгоритмом = [";
+    for (int l = 0; l < n; l++)
+    {
+        cout << " " << mass[l];
+    }
+    cout << " ] " << endl;
+}
